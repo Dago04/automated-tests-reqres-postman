@@ -38,7 +38,7 @@ Cada endpoint tiene:
 
 ##  Ejecución con Newman (opcional)
 
-Newman permite ejecutar pruebas desde la terminal (útil para CI/CD).
+Newman permite ejecutar pruebas desde la terminal.
 
 ###  Requisitos previos
 Debes tener [Node.js](https://nodejs.org/) instalado.
