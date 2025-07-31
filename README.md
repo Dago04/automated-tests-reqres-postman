@@ -55,7 +55,6 @@ newman run "Reqres API.postman_collection.json" -e "Reqres QA.postman_environmen
 
 ```
 📂reqres-api-postman-tests
-├── README.md
 ├── Reqres API.postman_collection.json
 └── Reqres QA.postman_environment.json 
 ```
