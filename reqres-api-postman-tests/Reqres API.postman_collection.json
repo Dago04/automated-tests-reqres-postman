@@ -1,0 +1,795 @@
+{
+	"info": {
+		"_postman_id": "3d49857e-cc61-4b83-89bb-fd06a7beebc2",
+		"name": "Reqres API",
+		"description": "Colección de pruebas automatizadas creadas con **Postman** utilizando la API pública [Reqres](https://reqres.in/).\n\n## 🎯 Objetivo\n\nDemostrar el uso de Postman para validar operaciones básicas sobre una API REST, incluyendo:\n\n- Ejecución de métodos HTTP (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`)\n    \n- Validaciones con scripts en JavaScript\n    \n- Uso de variables de entorno para reutilización de datos\n    \n- Organización de flujos dependientes entre requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42440967"
+	},
+	"item": [
+		{
+			"name": "Get Users",
+			"item": [
+				{
+					"name": "ListOfUsers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"let dataArray = jsonData.data;\r",
+									"const randomUser = dataArray[Math.floor(Math.random() * dataArray.length)];\r",
+									"let randomUserId = randomUser.id;\r",
+									"\r",
+									"pm.environment.set(\"userId\", randomUserId);\r",
+									"\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"    \"title\": \"Generated schema for Root\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"page\": {\r",
+									"            \"type\": \"number\"\r",
+									"        },\r",
+									"        \"per_page\": {\r",
+									"            \"type\": \"number\"\r",
+									"        },\r",
+									"        \"total\": {\r",
+									"            \"type\": \"number\"\r",
+									"        },\r",
+									"        \"total_pages\": {\r",
+									"            \"type\": \"number\"\r",
+									"        },\r",
+									"        \"data\": {\r",
+									"            \"type\": \"array\",\r",
+									"            \"items\": {\r",
+									"                \"type\": \"object\",\r",
+									"                \"properties\": {\r",
+									"                    \"id\": {\r",
+									"                        \"type\": \"number\"\r",
+									"                    },\r",
+									"                    \"email\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"first_name\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"last_name\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"avatar\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    }\r",
+									"                },\r",
+									"                \"required\": [\r",
+									"                    \"id\",\r",
+									"                    \"email\",\r",
+									"                    \"first_name\",\r",
+									"                    \"last_name\",\r",
+									"                    \"avatar\"\r",
+									"                ]\r",
+									"            }\r",
+									"        },\r",
+									"        \"support\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"url\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"text\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"url\",\r",
+									"                \"text\"\r",
+									"            ]\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"page\",\r",
+									"        \"per_page\",\r",
+									"        \"total\",\r",
+									"        \"total_pages\",\r",
+									"        \"data\",\r",
+									"        \"support\"\r",
+									"    ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content type to be application/json; charset=utf-8\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Data should be an array\", () => {\r",
+									"    pm.expect(dataArray).to.be.an('array');\r",
+									"})\r",
+									"\r",
+									"dataArray.forEach((item) => {\r",
+									"    pm.test(`Test the data types for item with id: ${item.id}`, () => {\r",
+									"        pm.expect(item.id).to.be.a('number');\r",
+									"        pm.expect(item.email).to.be.a('string');\r",
+									"        pm.expect(item.first_name).to.be.a('string');\r",
+									"        pm.expect(item.last_name).to.be.a('string');\r",
+									"        pm.expect(item.avatar).to.be.a('string');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"dataArray.forEach((item) => {\r",
+									"    pm.test(`Test the required properties for item with id ${item.id}`, () => {\r",
+									"        pm.expect(item).to.have.property(\"id\");\r",
+									"        pm.expect(item).to.have.property(\"email\");\r",
+									"        pm.expect(item).to.have.property(\"first_name\");\r",
+									"        pm.expect(item).to.have.property(\"last_name\");\r",
+									"        pm.expect(item).to.have.property(\"avatar\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}/users?page={{page_id}}",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{page_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SingleUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"const expectedSchema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"title\": \"Generated schema for Root\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"number\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"first_name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"last_name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"avatar\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"email\",\r",
+									"        \"first_name\",\r",
+									"        \"last_name\",\r",
+									"        \"avatar\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"support\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"url\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"text\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"url\",\r",
+									"        \"text\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"support\"\r",
+									"  ]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () =>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Content type to be application/json; charset=utf-8\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Data should be an object\", () => {\r",
+									"    pm.expect(jsonData.data).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data should have id, email, first_name, last_name, avatar properties\", () => {\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"avatar\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data id should be a number\", () =>{\r",
+									"    pm.expect(jsonData.data.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(`Data id value should be ${pm.environment.get(\"userId\")}`, () => {\r",
+									"    pm.expect(jsonData.data.id).to.eql(parseInt(pm.environment.get(\"userId\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});\r",
+									"\r",
+									"pm.environment.unset(\"userId\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}/users/{{userId}}",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "## 📁 Consultar Usuario\n\nContiene requests orientados a obtener información desde la API sin modificar datos. Es ideal para validar respuestas, estructuras y relaciones.\n\n- **Lista de usuarios**: Trae todos los usuarios disponibles por pagina y selecciona uno al azar para pruebas dinámicas.\n    \n- **Solo un usuario**: Usa el ID obtenido anteriormente para consultar un solo usuario."
+		},
+		{
+			"name": "Create User",
+			"item": [
+				{
+					"name": "CreateUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"userName\",\"Dagoberto Salas Cordero\");\r",
+									"pm.variables.set(\"userJob\", \"QA Engineer\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"newUserId\", jsonData.id);\r",
+									"\r",
+									"const expectedSchema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"title\": \"Generated schema for Root\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"name\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"job\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"id\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"createdAt\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"name\",\r",
+									"    \"job\",\r",
+									"    \"id\",\r",
+									"    \"createdAt\"\r",
+									"  ]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content type to be application/json; charset=utf-8\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body has correct name\", () => {\r",
+									"    pm.expect(jsonData.name).to.eql(pm.variables.get(\"userName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has correct job\", () => {\r",
+									"    pm.expect(jsonData.job).to.eql(pm.variables.get(\"userJob\"))\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Json schema\" , () =>{ \r",
+									"    pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response properties type\", () => {\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.job).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.createdAt).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response has the required properties\", () =>{\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData).to.have.property(\"name\");\r",
+									"    pm.expect(jsonData).to.have.property(\"job\");\r",
+									"    pm.expect(jsonData).to.have.property(\"createdAt\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{userName}}\",\r\n    \"job\": \"{{userJob}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/users",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "## 📁 Crear Usuario\n\nSimula la creación de un nuevo usuario y valida que la información enviada se refleje correctamente en la respuesta. Aunque la API no guarda los datos, se validan los datos devueltos."
+		},
+		{
+			"name": "Update User Put",
+			"item": [
+				{
+					"name": "UpdateUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"userNameUpdated\",\"Dagoberto Salas\");\r",
+									"pm.variables.set(\"userJobUpdated\", \"QA Engineer 2\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () =>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json;charset=utf-8\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Update name is correct\", () =>{\r",
+									"    pm.expect(jsonData.name).to.eql(pm.variables.get(\"userNameUpdated\"));\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Update job is correct\", () =>{\r",
+									"    pm.expect(jsonData.job).to.eql(pm.variables.get(\"userJobUpdated\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has updatedAt field\", () =>{\r",
+									"    pm.expect(jsonData).to.have.property(\"updatedAt\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{userNameUpdated}}\",\r\n    \"job\": \"{{userJobUpdated}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/users/{{newUserId}}",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "## 📁 Actualizar Usuario - PUT\n\nSimula la actualización total de un usuario (name y job). Se obtiene el ID aleatorio creado en la solicitud de crear usuario y luego se envía la actualización completa. Los tests validan que todos los campos se actualicen correctamente."
+		},
+		{
+			"name": "Update User Patch",
+			"item": [
+				{
+					"name": "UpdateUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () =>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json;charset=utf-8\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Update job is correct\", () =>{\r",
+									"    pm.expect(jsonData.job).to.eql(pm.variables.get(\"userJobUpdated\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has updatedAt field\", () =>{\r",
+									"    pm.expect(jsonData).to.have.property(\"updatedAt\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"userJobUpdated\", \"QA Engineer 2\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"job\": \"{{userJobUpdated}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/users/{{newUserId}}",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "📁 Actualizar Usuario- PATCH\n\nSimula la actualización parcial de un usuario(por ejemplo, solo el job). Se guarda la información original antes de hacer el cambio."
+		},
+		{
+			"name": "Delete User",
+			"item": [
+				{
+					"name": "DeleteUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 o 204\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+									"});\r",
+									"\r",
+									"pm.environment.unset(\"newUserId\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}/users/{{newUserId}}",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "📁 Eliminar Usuario- DELETE\n\nSimula la eliminación de un usuario."
+		},
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "GetEmail&Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"let dataArray = jsonData.data;\r",
+									"const randomUser = dataArray[Math.floor(Math.random() * dataArray.length)];\r",
+									"let randomUserId = randomUser.id;\r",
+									"let randomUserEmail = randomUser.email;\r",
+									"\r",
+									"\r",
+									"//Get first id from data object\r",
+									"pm.environment.set(\"userId\", randomUserId);\r",
+									"pm.environment.set(\"userEmail\",randomUserEmail);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}/users?page={{page_id}}",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{page_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successful Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"// Store the token in the collection variables for future use\r",
+									"pm.environment.set(\"token\", jsonData.token); \r",
+									"\r",
+									"pm.test(\"Status code is 200\", () =>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has correct id\", () => {\r",
+									"    pm.expect(jsonData.id).to.eql(parseInt(pm.environment.get(\"userId\")));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/register",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "📁 Registro - POST\n\nSimula el registro de un usuario, devuelve un token por usuario."
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Successful Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate Token\", () =>{\r",
+									"    pm.expect(jsonData.token).to.not.be.null;\r",
+									"    pm.expect(jsonData.token).to.be.eql(pm.environment.get(\"token\"));\r",
+									"});\r",
+									"\r",
+									"pm.environment.unset(\"userId\");\r",
+									"pm.environment.unset(\"userEmail\");\r",
+									"pm.environment.unset(\"token\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/login",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "📁 Login - POST\n\nSimula el login de un usuario previamente registrado, devuelve el token previamente creado en el registro de usuario."
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "reqres-free-v1",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "page_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
